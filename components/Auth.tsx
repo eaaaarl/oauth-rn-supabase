@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Button,
   Platform,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 import { supabase } from '../lib/supabase';
@@ -30,6 +30,41 @@ interface AuthState {
   error: string | null;
   isConfigured: boolean;
 }
+
+// Google Sign-In Button Component
+const GoogleSignInButton = ({ onPress, loading, disabled }: {
+  onPress: () => void;
+  loading: boolean;
+  disabled: boolean;
+}) => {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.googleButton,
+        (disabled || loading) && styles.googleButtonDisabled
+      ]}
+      onPress={onPress}
+      disabled={disabled || loading}
+      activeOpacity={0.8}
+    >
+      <View style={styles.googleButtonContent}>
+        {loading ? (
+          <ActivityIndicator size="small" color="#4285f4" style={styles.googleIcon} />
+        ) : (
+          <View style={styles.googleIconContainer}>
+            <Text style={styles.googleG}>G</Text>
+          </View>
+        )}
+        <Text style={[
+          styles.googleButtonText,
+          (disabled || loading) && styles.googleButtonTextDisabled
+        ]}>
+          {loading ? 'Signing in...' : 'Sign in with Google'}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 // Configure Google Sign In with better error handling
 const configureGoogleSignIn = () => {
@@ -226,7 +261,6 @@ export default function Auth() {
     }
   };
 
-  // Don't render if not configured
   if (!authState.isConfigured) {
     return (
       <View style={styles.container}>
@@ -243,18 +277,11 @@ export default function Auth() {
         <AuthDisplay user={authState.user} onSignOut={signOut} />
       ) : (
         <View style={styles.signInContainer}>
-          {authState.loading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#4285f4" />
-              <Text style={styles.loadingText}>Signing in...</Text>
-            </View>
-          ) : (
-            <Button
-              title="Sign in with Google"
-              onPress={signInWithGoogle}
-              disabled={authState.loading}
-            />
-          )}
+          <GoogleSignInButton
+            onPress={signInWithGoogle}
+            loading={authState.loading}
+            disabled={authState.loading}
+          />
 
           {authState.error && (
             <Text style={styles.errorText}>{authState.error}</Text>
@@ -276,20 +303,68 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  loadingContainer: {
-    alignItems: 'center',
-    padding: 20,
+  // Google Button Styles
+  googleButton: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#dadce0',
+    borderRadius: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    minWidth: 240,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#666',
+  googleButtonDisabled: {
+    backgroundColor: '#f8f9fa',
+    borderColor: '#e8eaed',
+    opacity: 0.6,
+  },
+  googleButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  googleIconContainer: {
+    width: 18,
+    height: 18,
+    marginRight: 12,
+    backgroundColor: '#ffffff',
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  googleG: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#4285f4',
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'Roboto',
+  },
+  googleIcon: {
+    marginRight: 12,
+  },
+  googleButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#3c4043',
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'Roboto',
+    textAlign: 'center',
+  },
+  googleButtonTextDisabled: {
+    color: '#9aa0a6',
   },
   errorText: {
     color: '#ff4444',
     textAlign: 'center',
-    marginTop: 10,
+    marginTop: 16,
     fontSize: 14,
     paddingHorizontal: 20,
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica Neue' : 'Roboto',
   },
 });
