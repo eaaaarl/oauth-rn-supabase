@@ -1,50 +1,131 @@
-# Welcome to your Expo app 👋
+# React Native OAuth with Supabase
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native application demonstrating OAuth authentication using Supabase and Google Sign-In. This project is built with Expo and TypeScript, providing a robust foundation for mobile authentication.
 
-## Get started
+## Features
 
-1. Install dependencies
+- 🔐 Google OAuth Authentication
+- 📱 Native Google Sign-In on Android
+- 🔄 Session Management
+- 🎨 Clean and Modern UI
+- 🛡️ TypeScript Support
+- 📦 Supabase Backend Integration
 
-   ```bash
-   npm install
-   ```
+## Prerequisites
 
-2. Start the app
+Before you begin, ensure you have the following installed:
+- Node.js (v14 or newer)
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- Android Studio (for Android development)
+- Google Cloud Console project with OAuth credentials
+- Supabase project
 
-   ```bash
-   npx expo start
-   ```
+## Environment Setup
 
-In the output, you'll find options to open the app in a
+1. Create a `.env` file in the root directory with the following variables:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```env
+EXPO_PUBLIC_SUPABASE_URL=your_supabase_url
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=your_google_web_client_id
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Installation
 
-## Learn more
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd rn-oauth-supabase
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+2. Install dependencies:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+3. Start the development server:
+```bash
+npm start
+```
 
-## Join the community
+## Running the App
 
-Join our community of developers creating universal apps.
+### Android
+```bash
+npm run android
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### iOS
+```bash
+npm run ios
+```
+
+### Web
+```bash
+npm run web
+```
+
+## Project Structure
+
+- `/app` - Expo Router configuration and main screens
+- `/components` - React components including authentication UI
+- `/lib` - Utility functions and Supabase configuration
+- `/assets` - Static assets like images and fonts
+
+## Authentication Flow
+
+1. The app initializes Google Sign-In configuration on startup
+2. Users can sign in using their Google account
+3. Upon successful Google authentication, the token is sent to Supabase
+4. Supabase validates the token and creates/updates the user session
+5. The app maintains the session using AsyncStorage
+
+## Key Dependencies
+
+- `@supabase/supabase-js`: Supabase JavaScript client
+- `@react-native-google-signin/google-signin`: Native Google Sign-In
+- `expo-web-browser`: Web authentication handling
+- `@react-native-async-storage/async-storage`: Session persistence
+- `expo-router`: File-based routing
+
+## Error Handling
+
+The application includes comprehensive error handling for:
+- Google Sign-In configuration issues
+- Authentication failures
+- Network errors
+- Session management problems
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Troubleshooting
+
+### Common Issues
+
+1. Google Sign-In Configuration
+   - Ensure your Google Cloud Console project is properly configured
+   - Verify the correct Web Client ID in environment variables
+   - Check that OAuth consent screen is configured
+
+2. Supabase Connection
+   - Verify Supabase URL and Anon Key in environment variables
+   - Ensure Supabase project has Google OAuth enabled
+   - Check CORS configuration in Supabase dashboard
+
+3. Android Build Issues
+   - Verify Android SDK installation
+   - Check gradle configuration
+   - Ensure debug.keystore is properly configured
+
+For more help, please check the [issues](https://github.com/eaaaarl/rn-oauth-supabase/issues) section or create a new issue.
